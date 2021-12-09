@@ -1,0 +1,22 @@
+{
+	"apps": [
+		{
+			"name": "gatekeeper",
+            "script": "build/index.js",
+            "env": {
+                "NODE_ENV": "production"
+            }
+		}
+	],
+	"deploy": {
+		"production": {
+			"user": "rnet",
+			"host": "192.168.137.30",
+			"ref": "origin/master",
+			"repo": "-b master https://github.com/ReadOnlyNet/gatekeeper.git",
+			"path": "/home/rnet/deploy/gatekeeper/",
+			"pre-setup": "rm -rf /home/rnet/deploy/gatekeeper/*",
+			"post-deploy": "yarn && yarn build && cp -f /home/rnet/gatekeeper/config/config.yml ./config/config.yml && mkdir /home/rnet/gatekeeper-temp/ && cp -rf /home/rnet/deploy/gatekeeper/source/. /home/rnet/gatekeeper-temp && rm -rf /home/rnet/old.gatekeeper && mv /home/rnet/gatekeeper /home/rnet/old.gatekeeper && mv /home/rnet/gatekeeper-temp /home/rnet/gatekeeper && pm2 restart gatekeeper"
+		}
+	}
+}
